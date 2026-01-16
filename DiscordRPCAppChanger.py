@@ -64,9 +64,6 @@ def get_user_input():
     root.geometry("600x550")
     root.resizable(False, False)
     
-    # Set window transparency (5% opacity for maximum background visibility)
-    root.attributes('-alpha', 0.05)
-    
     # Center window
     root.eval('tk::PlaceWindow . center')
     
@@ -92,19 +89,27 @@ def get_user_input():
     except:
         root.configure(bg='#2C2F33')
     
-    # Create main frame with transparency
-    main_frame = tk.Frame(root, bg='#2C2F33')
+    # Create semi-transparent overlay using PIL
+    overlay_width, overlay_height = 450, 500
+    overlay_img = Image.new('RGBA', (overlay_width, overlay_height), (44, 47, 51, 13))  # RGBA with alpha=13 (5%)
+    overlay_photo = ImageTk.PhotoImage(overlay_img)
+    overlay_label = tk.Label(root, image=overlay_photo, bd=0, highlightthickness=0)
+    overlay_label.image = overlay_photo
+    overlay_label.place(relx=0.5, rely=0.5, anchor='center')
+    
+    # Create main frame on top of overlay
+    main_frame = tk.Frame(root, bg='', bd=0, highlightthickness=0)
     main_frame.place(relx=0.5, rely=0.5, anchor='center')
     
-    # Title
+    # Title with transparent background
     title_label = tk.Label(main_frame, text="Discord RPC Setup", 
                            font=("Arial", 16, "bold"), 
-                           bg='#2C2F33', fg='#FFFFFF')
+                           bg='', fg='#FFFFFF')
     title_label.pack(pady=15)
     
     # Client ID
     tk.Label(main_frame, text="Your client ID:", 
-             font=("Arial", 11), bg='#2C2F33', fg='#B9BBBE').pack(pady=5)
+             font=("Arial", 11), bg='', fg='#B9BBBE').pack(pady=5)
     client_id_entry = tk.Entry(main_frame, width=35, font=("Arial", 11), 
                                bg='#40444B', fg='#FFFFFF', 
                                insertbackground='white', relief='flat', bd=5)
@@ -113,7 +118,7 @@ def get_user_input():
     
     # App Name
     tk.Label(main_frame, text="Name of your application:", 
-             font=("Arial", 11), bg='#2C2F33', fg='#B9BBBE').pack(pady=5)
+             font=("Arial", 11), bg='', fg='#B9BBBE').pack(pady=5)
     app_name_entry = tk.Entry(main_frame, width=35, font=("Arial", 11), 
                               bg='#40444B', fg='#FFFFFF', 
                               insertbackground='white', relief='flat', bd=5)
@@ -122,7 +127,7 @@ def get_user_input():
     
     # Details
     tk.Label(main_frame, text="Activity description (short):", 
-             font=("Arial", 11), bg='#2C2F33', fg='#B9BBBE').pack(pady=5)
+             font=("Arial", 11), bg='', fg='#B9BBBE').pack(pady=5)
     details_entry = tk.Entry(main_frame, width=35, font=("Arial", 11), 
                             bg='#40444B', fg='#FFFFFF', 
                             insertbackground='white', relief='flat', bd=5)
@@ -131,7 +136,7 @@ def get_user_input():
     
     # State
     tk.Label(main_frame, text="State (optional):", 
-             font=("Arial", 11), bg='#2C2F33', fg='#B9BBBE').pack(pady=5)
+             font=("Arial", 11), bg='', fg='#B9BBBE').pack(pady=5)
     state_entry = tk.Entry(main_frame, width=35, font=("Arial", 11), 
                           bg='#40444B', fg='#FFFFFF', 
                           insertbackground='white', relief='flat', bd=5)
