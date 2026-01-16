@@ -76,13 +76,19 @@ def on_quit(icon, item):
     icon.stop()
     exit()
 
-def run_tray_icon():
+def run_tray_icon(rpc_ref):
     """Run the system tray icon"""
+    def on_clear(icon, item):
+        """Clear RPC"""
+        clear_rpc(rpc_ref[0])
+        rpc_ref[0] = None
+    
     icon = pystray.Icon(
         "Discord RPC",
         create_image(),
         "Discord RPC Manager",
         menu=pystray.Menu(
+            pystray.MenuItem("Clear RPC", on_clear),
             pystray.MenuItem("Exit", on_quit)
         )
     )
@@ -103,21 +109,26 @@ def main():
     # Hide console
     hide_console()
     
-    # Run the system tray icon in a separate thread
-    tray_thread = threading.Thread(target=run_tray_icon, daemon=True)
-    tray_thread.start()
-
-    while True:
-        try:
-            if keyboard.is_pressed("ctrl+alt+c"):
-                clear_rpc(current_rpc)
-                current_rpc = None
-                time.sleep(0.5)
-
-            time.sleep(0.05)
-
-        except KeyboardInterrupt:
-            break
+    # RPC reference for tray icon
+    rpc_ref = [current_rpc]
+    
+    # Run keyboard listener in a separate thread
+    def keyboard_listener():
+        while True:
+            try:
+                if keyboard.is_pressed("ctrl+alt+c"):
+                    clear_rpc(rpc_ref[0])
+                    rpc_ref[0] = None
+                    time.sleep(0.5)
+                time.sleep(0.05)
+            except:
+                break
+    
+    listener_thread = threading.Thread(target=keyboard_listener, daemon=True)
+    listener_thread.start()
+    
+    # Run the system tray icon in main thread (blocking)
+    run_tray_icon(rpc_ref)
 
 
 if __name__ == "__main__":
