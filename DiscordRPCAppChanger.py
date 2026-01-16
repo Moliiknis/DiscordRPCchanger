@@ -63,6 +63,7 @@ def get_user_input():
     root.title("Discord RPC Setup")
     root.geometry("600x550")
     root.resizable(False, False)
+    root.configure(bg='black')
     
     # Center window
     root.eval('tk::PlaceWindow . center')
@@ -77,7 +78,7 @@ def get_user_input():
     except:
         pass
     
-    # Try to set background image
+    # Try to set background image - full opacity
     try:
         if os.path.exists(BACKGROUND_IMAGE):
             bg_image = Image.open(BACKGROUND_IMAGE)
@@ -89,15 +90,20 @@ def get_user_input():
     except:
         root.configure(bg='#2C2F33')
     
-    # Create semi-transparent overlay using PIL
+    # Create semi-transparent overlay using PIL with alpha channel
     overlay_width, overlay_height = 450, 500
-    overlay_img = Image.new('RGBA', (overlay_width, overlay_height), (44, 47, 51, 13))  # RGBA with alpha=13 (5%)
-    overlay_photo = ImageTk.PhotoImage(overlay_img)
-    overlay_label = tk.Label(root, image=overlay_photo, bd=0, highlightthickness=0)
-    overlay_label.image = overlay_photo
-    overlay_label.place(relx=0.5, rely=0.5, anchor='center')
+    # Create RGBA image with 5% opacity (alpha = 13 out of 255)
+    overlay_base = Image.new('RGBA', (overlay_width, overlay_height), (44, 47, 51, 13))
+    overlay_photo = ImageTk.PhotoImage(overlay_base)
     
-    # Create main frame on top of overlay
+    # Place overlay
+    overlay_canvas = tk.Canvas(root, width=overlay_width, height=overlay_height, 
+                               bg='', highlightthickness=0, bd=0)
+    overlay_canvas.place(relx=0.5, rely=0.5, anchor='center')
+    overlay_canvas.create_image(0, 0, image=overlay_photo, anchor='nw')
+    overlay_canvas.image = overlay_photo
+    
+    # Create main frame on top
     main_frame = tk.Frame(root, bg='', bd=0, highlightthickness=0)
     main_frame.place(relx=0.5, rely=0.5, anchor='center')
     
