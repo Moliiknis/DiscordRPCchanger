@@ -121,6 +121,19 @@ def run_tray_icon(rpc_ref):
     icon.run()
 
 def main():
+    # Create tray icon reference
+    rpc_ref = [None]
+    
+    # Start tray icon in background thread FIRST
+    def start_tray():
+        run_tray_icon(rpc_ref)
+    
+    tray_thread = threading.Thread(target=start_tray, daemon=False)
+    tray_thread.start()
+    
+    # Small delay to ensure tray starts
+    time.sleep(0.5)
+    
     # Get user input via GUI window
     get_user_input()
     
@@ -130,8 +143,8 @@ def main():
     if not current_rpc:
         return
     
-    # RPC reference for tray icon
-    rpc_ref = [current_rpc]
+    # Update RPC reference
+    rpc_ref[0] = current_rpc
     
     # Run keyboard listener in a separate thread
     def keyboard_listener():
@@ -148,8 +161,9 @@ def main():
     listener_thread = threading.Thread(target=keyboard_listener, daemon=True)
     listener_thread.start()
     
-    # Run the system tray icon in main thread (blocking)
-    run_tray_icon(rpc_ref)
+    # Keep main thread alive
+    while True:
+        time.sleep(1)
 
 
 if __name__ == "__main__":
