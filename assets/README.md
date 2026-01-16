@@ -1,14 +1,14 @@
-# Замена изображений
+# Image Replacement
 
-Вы можете легко заменить изображения приложения **без пересборки**!
+You can easily replace application images **without rebuilding**!
 
-## Как это работает
+## How It Works
 
-Приложение автоматически загружает изображения из папки `assets`, которая должна находиться рядом с исполняемым файлом.
+The application automatically loads images from the `assets` folder, which should be located next to the executable file.
 
-## Шаг 1: Найдите папку assets
+## Step 1: Locate the assets Folder
 
-После сборки приложения структура должна выглядеть так:
+After building the application, the structure should look like this:
 ```
 dist/
 ├── DiscordRPCAppChanger.exe
@@ -18,23 +18,23 @@ dist/
     └── app_icon.jpg
 ```
 
-**Важно:** Скопируйте папку `assets` из корня проекта в папку `dist/` рядом с `.exe` файлом!
+**Important:** Copy the `assets` folder from the project root to the `dist/` folder next to the `.exe` file!
 
-## Шаг 2: Замените изображения
+## Step 2: Replace Images
 
-Просто замените файлы в папке `assets/`:
-- `background.jpg` - фоновое изображение для GUI (рекомендуемый размер: 800x600)
-- `icon.jpg` - иконка для системного трея (рекомендуемый размер: 256x256)
-- `app_icon.jpg` - иконка окна приложения (рекомендуемый размер: 64x64)
+Simply replace the files in the `assets/` folder:
+- `background.jpg` - background image for GUI (recommended size: 800x600)
+- `icon.jpg` - system tray icon (recommended size: 256x256)
+- `app_icon.jpg` - application window icon (recommended size: 64x64)
 
-## Шаг 3: Запустите приложение
+## Step 3: Run the Application
 
-Запустите `DiscordRPCAppChanger.exe` - новые изображения загрузятся автоматически!
+Launch `DiscordRPCAppChanger.exe` - new images will load automatically!
 
-**Пересборка не требуется!** 🎉
+**No rebuild required!** 🎉
 
-## Примечание
+## Note
 
-- Используйте формат JPG для совместимости
-- Убедитесь, что имена файлов точно совпадают
-- Папка `assets` должна быть в той же директории, что и `.exe` файл
+- Use JPG format for compatibility
+- Make sure file names match exactly
+- The `assets` folder must be in the same directory as the `.exe` file
