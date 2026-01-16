@@ -20,11 +20,16 @@ details_from_user = ""
 state_user = ""
 
 def get_resource_path(relative_path):
-    """Get absolute path to resource, works for dev and for PyInstaller"""
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
+    """Get absolute path to resource, works for dev and for PyInstaller
+    
+    Always looks for files next to the executable, allowing users to 
+    replace images without rebuilding the application.
+    """
+    if getattr(sys, 'frozen', False):
+        # If running as compiled executable, use directory of executable
+        base_path = os.path.dirname(sys.executable)
+    else:
+        # If running as script, use current directory
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 

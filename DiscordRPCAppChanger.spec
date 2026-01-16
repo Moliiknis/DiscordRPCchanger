@@ -5,9 +5,7 @@ a = Analysis(
     ['DiscordRPCAppChanger.py'],
     pathex=[],
     binaries=[],
-    datas=[
-        ('assets', 'assets'),
-    ],
+    datas=[],
     hiddenimports=['pypresence', 'keyboard', 'pystray', 'PIL'],
     hookspath=[],
     hooksconfig={},

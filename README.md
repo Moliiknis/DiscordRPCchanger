@@ -24,4 +24,26 @@ To build the executable:
 pyinstaller DiscordRPCAppChanger.spec
 ```
 
-The `assets` folder will be automatically included in the build.
+**Important:** After building, copy the `assets` folder to the `dist/` directory:
+```bash
+# Windows (PowerShell)
+Copy-Item -Recurse assets dist/
+
+# Linux/Mac
+cp -r assets dist/
+```
+
+The final structure should be:
+```
+dist/
+├── DiscordRPCAppChanger.exe
+└── assets/
+    ├── background.jpg
+    ├── icon.jpg
+    └── app_icon.jpg
+```
+
+## Customizing Images
+
+You can replace images in the `dist/assets/` folder **without rebuilding** the application!
+Just replace the files and restart the app. See `assets/README.md` for details.
