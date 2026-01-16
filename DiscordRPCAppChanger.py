@@ -64,6 +64,9 @@ def get_user_input():
     root.geometry("500x450")
     root.resizable(False, False)
     
+    # Set window transparency (90% opacity)
+    root.attributes('-alpha', 0.9)
+    
     # Center window
     root.eval('tk::PlaceWindow . center')
     
