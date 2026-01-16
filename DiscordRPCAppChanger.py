@@ -191,7 +191,7 @@ def custom_rpc():
         messagebox.showerror("RPC Error", f"Failed to connect: {e}")
         return None
 
-# --- clear RPC ---
+# Clear RPC
 def clear_rpc(current):
     try:
         if current:
@@ -201,7 +201,7 @@ def clear_rpc(current):
         pass
 
 
-# --- main  ---
+# Main functions
 def create_image():
     """Make an icon image for the system tray"""
     try:
