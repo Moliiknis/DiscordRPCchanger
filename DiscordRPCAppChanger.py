@@ -47,7 +47,7 @@ def clear_rpc(current):
 
 # --- main  ---
 def hide_console():
-    """Скрыть консольное окно"""
+    """Hide console window"""
     kernel32 = ctypes.WinDLL('kernel32')
     user32 = ctypes.WinDLL('user32')
     hwnd = kernel32.GetConsoleWindow()
@@ -55,7 +55,7 @@ def hide_console():
         user32.ShowWindow(hwnd, 0)
 
 def show_console():
-    """Показать консольное окно"""
+    """Show console window"""
     kernel32 = ctypes.WinDLL('kernel32')
     user32 = ctypes.WinDLL('user32')
     hwnd = kernel32.GetConsoleWindow()
@@ -63,7 +63,7 @@ def show_console():
         user32.ShowWindow(hwnd, 5)
 
 def create_image():
-    """Создать иконку для трея"""
+    """Make an icon image for the system tray"""
     width = 64
     height = 64
     image = Image.new('RGB', (width, height), color='#5865F2')
@@ -72,12 +72,12 @@ def create_image():
     return image
 
 def on_quit(icon, item):
-    """Выход из приложения"""
+    """Exit the application"""
     icon.stop()
     exit()
 
 def run_tray_icon():
-    """Запустить иконку в трее"""
+    """Run the system tray icon"""
     icon = pystray.Icon(
         "Discord RPC",
         create_image(),
@@ -93,17 +93,17 @@ def main():
     print("🔥 Hotkey RPC is running")
     print("Ctrl+Alt+C = Clear")
     print("Already complete, Happy Changering")
-    print("\nПриложение сворачивается в трей через 3 секунды...")
+    print("\nApplication will minimize to tray in 3 seconds...")
     
     time.sleep(3)
     
-    # Запустить RPC
+    # Start RPC
     current_rpc = custom_rpc()
     
-    # Скрыть консоль
+    # Hide console
     hide_console()
     
-    # Запустить иконку в трее в отдельном потоке
+    # Run the system tray icon in a separate thread
     tray_thread = threading.Thread(target=run_tray_icon, daemon=True)
     tray_thread.start()
 
