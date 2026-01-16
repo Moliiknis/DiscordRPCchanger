@@ -61,11 +61,11 @@ def get_user_input():
     
     root = tk.Tk()
     root.title("Discord RPC Setup")
-    root.geometry("500x450")
+    root.geometry("600x550")
     root.resizable(False, False)
     
-    # Set window transparency (90% opacity)
-    root.attributes('-alpha', 0.9)
+    # Set window transparency (5% opacity for maximum background visibility)
+    root.attributes('-alpha', 0.05)
     
     # Center window
     root.eval('tk::PlaceWindow . center')
@@ -84,7 +84,7 @@ def get_user_input():
     try:
         if os.path.exists(BACKGROUND_IMAGE):
             bg_image = Image.open(BACKGROUND_IMAGE)
-            bg_image = bg_image.resize((500, 450), Image.Resampling.LANCZOS)
+            bg_image = bg_image.resize((600, 550), Image.Resampling.LANCZOS)
             bg_photo = ImageTk.PhotoImage(bg_image)
             bg_label = tk.Label(root, image=bg_photo)
             bg_label.image = bg_photo
