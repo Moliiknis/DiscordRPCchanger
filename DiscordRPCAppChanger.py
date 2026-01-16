@@ -4,17 +4,60 @@ import time
 import pystray
 from PIL import Image, ImageDraw
 import threading
-import ctypes
+import tkinter as tk
+from tkinter import messagebox
 
-# --- custom RPC ---
-print("Your client id:")
-client_id_from_user = input()
-print("Name of your application:")
-user_app_name = input()
-print("Write a description of your activity (preferably short)<3:")
-details_from_user = input()
-print("Add state if you want:")
-state_user = input()
+# Global variables for user input
+client_id_from_user = ""
+user_app_name = ""
+details_from_user = ""
+state_user = ""
+
+def get_user_input():
+    """Create a simple GUI window to get user input"""
+    global client_id_from_user, user_app_name, details_from_user, state_user
+    
+    root = tk.Tk()
+    root.title("Discord RPC Setup")
+    root.geometry("400x300")
+    root.resizable(False, False)
+    
+    # Center window
+    root.eval('tk::PlaceWindow . center')
+    
+    tk.Label(root, text="Your client ID:", font=("Arial", 10)).pack(pady=5)
+    client_id_entry = tk.Entry(root, width=40, font=("Arial", 10))
+    client_id_entry.pack(pady=5)
+    
+    tk.Label(root, text="Name of your application:", font=("Arial", 10)).pack(pady=5)
+    app_name_entry = tk.Entry(root, width=40, font=("Arial", 10))
+    app_name_entry.pack(pady=5)
+    
+    tk.Label(root, text="Activity description (short):", font=("Arial", 10)).pack(pady=5)
+    details_entry = tk.Entry(root, width=40, font=("Arial", 10))
+    details_entry.pack(pady=5)
+    
+    tk.Label(root, text="State (optional):", font=("Arial", 10)).pack(pady=5)
+    state_entry = tk.Entry(root, width=40, font=("Arial", 10))
+    state_entry.pack(pady=5)
+    
+    def submit():
+        global client_id_from_user, user_app_name, details_from_user, state_user
+        client_id_from_user = client_id_entry.get()
+        user_app_name = app_name_entry.get()
+        details_from_user = details_entry.get()
+        state_user = state_entry.get()
+        
+        if not client_id_from_user:
+            messagebox.showerror("Error", "Client ID is required!")
+            return
+        
+        root.quit()
+        root.destroy()
+    
+    tk.Button(root, text="Start RPC", command=submit, bg="#5865F2", fg="white", width=20, font=("Arial", 10, "bold")).pack(pady=20)
+    
+    root.mainloop()
 
 
 def custom_rpc():
@@ -28,11 +71,11 @@ def custom_rpc():
             details= details_from_user,
             state= state_user
         )
-        print("[RPC] is ready to use")
         return RPC
 
     except Exception as e:
-        print("error RPC:", e)
+        messagebox.showerror("RPC Error", f"Failed to connect: {e}")
+        return None
 
 # --- clear RPC ---
 def clear_rpc(current):
@@ -40,43 +83,11 @@ def clear_rpc(current):
         if current:
             current.clear()
             current.close()
-        print("[RPC] is clear")
     except:
         pass
 
 
 # --- main  ---
-def hide_console():
-    """Hide console window"""
-    kernel32 = ctypes.WinDLL('kernel32')
-    user32 = ctypes.WinDLL('user32')
-    hwnd = kernel32.GetConsoleWindow()
-    if hwnd:
-        user32.ShowWindow(hwnd, 0)
-
-def set_console_ctrl_handler():
-    """Prevent console from closing when X is clicked"""
-    # Constants for SetConsoleCtrlHandler
-    CTRL_CLOSE_EVENT = 2
-    
-    def handler(ctrl_type):
-        if ctrl_type == CTRL_CLOSE_EVENT:
-            # Hide console instead of closing
-            hide_console()
-            return 1  # Return True to prevent closing
-        return 0
-    
-    # Define the handler function type
-    HandlerRoutine = ctypes.WINFUNCTYPE(ctypes.c_int, ctypes.c_uint)
-    handler_func = HandlerRoutine(handler)
-    
-    # Set the console control handler
-    kernel32 = ctypes.windll.kernel32
-    kernel32.SetConsoleCtrlHandler(handler_func, 1)
-    
-    # Keep reference to prevent garbage collection
-    return handler_func
-
 def create_image():
     """Make an icon image for the system tray"""
     width = 64
@@ -110,22 +121,14 @@ def run_tray_icon(rpc_ref):
     icon.run()
 
 def main():
-    print("🔥 Discord RPC is starting...")
-    print("Enter your details below:")
-    
-    # Set handler to prevent console closing
-    handler_ref = set_console_ctrl_handler()
+    # Get user input via GUI window
+    get_user_input()
     
     # Start RPC
     current_rpc = custom_rpc()
     
-    print("\n✅ RPC is active! Minimizing to tray...")
-    print("Ctrl+Alt+C = Clear RPC")
-    print("Note: Closing this window will hide it to tray")
-    time.sleep(2)
-    
-    # Hide console window
-    hide_console()
+    if not current_rpc:
+        return
     
     # RPC reference for tray icon
     rpc_ref = [current_rpc]
