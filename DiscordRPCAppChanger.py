@@ -10,12 +10,6 @@ import json
 import os
 import sys
 
-# Paths to images
-BACKGROUND_IMAGE = r"C:\Users\maxgr\Downloads\29885317a9656507849f62252b1c5538.jpg"
-ICON_IMAGE = r"C:\Users\maxgr\Downloads\4870716c769822ab9ec6fd94c15915d4.jpg"
-APP_ICON = r"C:\Users\maxgr\Downloads\43534326432562623435.jpg"
-
-# Config file to save user data
 # Config file to save user data
 CONFIG_FILE = "rpc_config.json"
 
@@ -33,6 +27,11 @@ def get_resource_path(relative_path):
     except Exception:
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
+
+# Paths to images (using relative paths)
+BACKGROUND_IMAGE = get_resource_path(os.path.join("assets", "background.jpg"))
+ICON_IMAGE = get_resource_path(os.path.join("assets", "icon.jpg"))
+APP_ICON = get_resource_path(os.path.join("assets", "app_icon.jpg"))
 
 def load_config():
     """Load saved configuration"""
