@@ -54,6 +54,29 @@ def hide_console():
     if hwnd:
         user32.ShowWindow(hwnd, 0)
 
+def set_console_ctrl_handler():
+    """Prevent console from closing when X is clicked"""
+    # Constants for SetConsoleCtrlHandler
+    CTRL_CLOSE_EVENT = 2
+    
+    def handler(ctrl_type):
+        if ctrl_type == CTRL_CLOSE_EVENT:
+            # Hide console instead of closing
+            hide_console()
+            return 1  # Return True to prevent closing
+        return 0
+    
+    # Define the handler function type
+    HandlerRoutine = ctypes.WINFUNCTYPE(ctypes.c_int, ctypes.c_uint)
+    handler_func = HandlerRoutine(handler)
+    
+    # Set the console control handler
+    kernel32 = ctypes.windll.kernel32
+    kernel32.SetConsoleCtrlHandler(handler_func, 1)
+    
+    # Keep reference to prevent garbage collection
+    return handler_func
+
 def create_image():
     """Make an icon image for the system tray"""
     width = 64
@@ -90,11 +113,15 @@ def main():
     print("🔥 Discord RPC is starting...")
     print("Enter your details below:")
     
+    # Set handler to prevent console closing
+    handler_ref = set_console_ctrl_handler()
+    
     # Start RPC
     current_rpc = custom_rpc()
     
     print("\n✅ RPC is active! Minimizing to tray...")
     print("Ctrl+Alt+C = Clear RPC")
+    print("Note: Closing this window will hide it to tray")
     time.sleep(2)
     
     # Hide console window
