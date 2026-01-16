@@ -5,59 +5,16 @@ import pystray
 from PIL import Image, ImageDraw
 import threading
 import ctypes
-import tkinter as tk
-from tkinter import messagebox
 
-# Global variables for user input
-client_id_from_user = ""
-user_app_name = ""
-details_from_user = ""
-state_user = ""
-
-def get_user_input():
-    """Create a simple GUI window to get user input"""
-    global client_id_from_user, user_app_name, details_from_user, state_user
-    
-    root = tk.Tk()
-    root.title("Discord RPC Setup")
-    root.geometry("400x300")
-    root.resizable(False, False)
-    
-    # Center window
-    root.eval('tk::PlaceWindow . center')
-    
-    tk.Label(root, text="Your client ID:").pack(pady=5)
-    client_id_entry = tk.Entry(root, width=50)
-    client_id_entry.pack(pady=5)
-    
-    tk.Label(root, text="Name of your application:").pack(pady=5)
-    app_name_entry = tk.Entry(root, width=50)
-    app_name_entry.pack(pady=5)
-    
-    tk.Label(root, text="Activity description (short):").pack(pady=5)
-    details_entry = tk.Entry(root, width=50)
-    details_entry.pack(pady=5)
-    
-    tk.Label(root, text="State (optional):").pack(pady=5)
-    state_entry = tk.Entry(root, width=50)
-    state_entry.pack(pady=5)
-    
-    def submit():
-        global client_id_from_user, user_app_name, details_from_user, state_user
-        client_id_from_user = client_id_entry.get()
-        user_app_name = app_name_entry.get()
-        details_from_user = details_entry.get()
-        state_user = state_entry.get()
-        
-        if not client_id_from_user:
-            messagebox.showerror("Error", "Client ID is required!")
-            return
-        
-        root.destroy()
-    
-    tk.Button(root, text="Start RPC", command=submit, bg="#5865F2", fg="white", width=20).pack(pady=20)
-    
-    root.mainloop()
+# --- custom RPC ---
+print("Your client id:")
+client_id_from_user = input()
+print("Name of your application:")
+user_app_name = input()
+print("Write a description of your activity (preferably short)<3:")
+details_from_user = input()
+print("Add state if you want:")
+state_user = input()
 
 
 def custom_rpc():
@@ -89,6 +46,14 @@ def clear_rpc(current):
 
 
 # --- main  ---
+def hide_console():
+    """Hide console window"""
+    kernel32 = ctypes.WinDLL('kernel32')
+    user32 = ctypes.WinDLL('user32')
+    hwnd = kernel32.GetConsoleWindow()
+    if hwnd:
+        user32.ShowWindow(hwnd, 0)
+
 def create_image():
     """Make an icon image for the system tray"""
     width = 64
@@ -122,11 +87,18 @@ def run_tray_icon(rpc_ref):
     icon.run()
 
 def main():
-    # Get user input via GUI
-    get_user_input()
+    print("🔥 Discord RPC is starting...")
+    print("Enter your details below:")
     
     # Start RPC
     current_rpc = custom_rpc()
+    
+    print("\n✅ RPC is active! Minimizing to tray...")
+    print("Ctrl+Alt+C = Clear RPC")
+    time.sleep(2)
+    
+    # Hide console window
+    hide_console()
     
     # RPC reference for tray icon
     rpc_ref = [current_rpc]
