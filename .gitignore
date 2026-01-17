@@ -32,7 +32,6 @@ MANIFEST
 *.manifest
 # Keep .spec files for this project
 # *.spec
-dist/
 
 # Installer logs
 pip-log.txt
