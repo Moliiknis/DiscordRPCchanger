@@ -5,6 +5,7 @@ You can easily replace application images **without rebuilding**!
 ## How It Works
 
 The application automatically loads images from the `assets` folder, which should be located next to the executable file.
+!!!REMEMBER, you should change a name of your image!!!
 
 ## Step 1: Locate the assets Folder
 
